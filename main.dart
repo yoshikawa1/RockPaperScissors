@@ -24,12 +24,15 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String rock = '✊';
-  final String scissors = '✌';
-  final String paper = '✋';
-  final double textSmall = 20;
-  final double textMedium = 35;
-  final double textLarge = 44;
+  static const String rock = '✊';
+  static const String scissors = '✌';
+  static const String paper = '✋';
+  static const String win = '勝ち　　';
+  static const String draw = '引き分け';
+  static const String lose = '負け　　';
+  static const double textSmall = 20;
+  static const double textMedium = 35;
+  static const double textLarge = 44;
   String myTurn = '';
   String opponentTurn = '';
   String result = '';
@@ -66,25 +69,47 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void judge() {
     if (myTurn == opponentTurn) {
-      result = '引き分け';
+      result = draw;
       countDraw++;
     } else if (myTurn == rock && opponentTurn == scissors ||
         myTurn == scissors && opponentTurn == paper ||
         myTurn == paper && opponentTurn == rock) {
-      result = '勝ち　　';
+      result = win;
       countWin++;
     } else {
-      result = '負け　　';
+      result = lose;
       countLose++;
     }
   }
 
   void makeHistory() {
     game++;
+    String resultSymbol;
+    switch (result) {
+      case win:
+        resultSymbol = '○';
+        break;
+      case draw:
+        resultSymbol = '△';
+        break;
+      case lose:
+        resultSymbol = '●';
+        break;
+      default:
+        resultSymbol = '';
+        break;
+    }
+
+    if (historyList.isNotEmpty) {
+      historyList.removeAt(historyList.length - 1); //見切れ対策の最終空行を一度削除
+    }
     historyList.add(
       ListTile(
           title: Text(
-              '${game.toString().padLeft(2, '  ')}試合目　$result　$myTurn vs $opponentTurn')),
+              '${game.toString().padLeft(2, '  ')}試合目　$resultSymbol　$myTurn vs $opponentTurn')),
+    );
+    historyList.add(
+      const ListTile(title: Text('')), //見切れ対策で最終行に空行を入れる
     );
   }
 
@@ -107,13 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('じゃんけん'),
       ),
       body: Container(
-        padding: EdgeInsets.all(15),
+        padding: const EdgeInsets.all(15),
         child: DefaultTextStyle.merge(
-          style: TextStyle(fontSize: textMedium),
+          style: const TextStyle(fontSize: textMedium),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
+              const Text(
                 '下の３つから選んでください',
                 style: TextStyle(fontSize: textSmall),
               ),
@@ -124,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       selectHand(rock);
                     },
-                    child: Text(
+                    child: const Text(
                       rock,
                       style: TextStyle(fontSize: textLarge),
                     ),
@@ -133,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       selectHand(scissors);
                     },
-                    child: Text(
+                    child: const Text(
                       scissors,
                       style: TextStyle(fontSize: textLarge),
                     ),
@@ -142,7 +167,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     onPressed: () {
                       selectHand(paper);
                     },
-                    child: Text(
+                    child: const Text(
                       paper,
                       style: TextStyle(fontSize: textLarge),
                     ),
