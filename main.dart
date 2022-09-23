@@ -33,6 +33,7 @@ class _MyHomePageState extends State<MyHomePage> {
   static const double textSmall = 20;
   static const double textMedium = 35;
   static const double textLarge = 44;
+
   String myTurn = '';
   String opponentTurn = '';
   String result = '';
