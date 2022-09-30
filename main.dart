@@ -1,9 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -42,6 +44,25 @@ class _MyHomePageState extends State<MyHomePage> {
   int countWin = 0;
   int countDraw = 0;
   int countLose = 0;
+  late BannerAd myBanner;
+
+  @override
+  void initState() {
+    super.initState();
+    _setBanner();
+  }
+
+  void _setBanner() async {
+    // バナー広告をインスタンス化
+    myBanner = BannerAd(
+        adUnitId:
+            "ca-app-pub-3940256099942544/2934735716", // Androidのデモ用バナー広告ID
+        size: AdSize.banner,
+        request: const AdRequest(),
+        listener: const BannerAdListener());
+    // バナー広告の読み込み
+    myBanner.load();
+  }
 
   void selectHand(String selectedHand) {
     myTurn = selectedHand;
@@ -201,6 +222,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   itemCount: historyList.length,
                   itemBuilder: (context, i) => historyList[i],
                 ),
+              ),
+              Container(
+                height: 60,
+                child: AdWidget(ad: myBanner),
               ),
             ],
           ),
